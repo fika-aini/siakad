@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route; 
 use App\Http\Controllers\MahasiswaController; 
 use App\Http\Controllers\PageController;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request; 
 
 /*
@@ -16,5 +17,4 @@ use Illuminate\Http\Request;
 |
 */
 Route::resource('mahasiswa', MahasiswaController::class);
-Route::get('/', [PageController::class, 'index']);
-Route::get('/cari', [PageController::class, 'cari']);
+Route::get('cari',[MahasiswaController::class, 'cari'])->name('cari');

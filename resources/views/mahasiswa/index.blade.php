@@ -6,6 +6,19 @@
             <div class="pull-left mt-2">
                 <h2>JURUSAN TEKNOLOGI INFORMASI-POLITEKNIK NEGERI MALANG</h2>
             </div>
+            <div class="row">
+                <div class="float-md-left mt-4">
+                    <div class="col-md-12">
+                        <form action="{{ route('cari') }}" method="GET">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search Name" name="cari" value="{{  old('cari') }}">
+                                <button class="btn btn-outline-success" type="submit" value="cari">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="float-right my-2">
                 <a class="btn btn-success" href="{{ route('mahasiswa.create') }}"> Input Mahasiswa</a>
             </div>
@@ -24,21 +37,17 @@
             <th>Nama</th>
             <th>Kelas</th>
             <th>Jurusan</th>
-            <th>E-mail</th>
-            <th>Alamat</th>
-            <th>Tanggal Lahir</th>
+            
             <th width="280px">Action</th>
         </tr>
         @foreach ($mahasiswa as $mhs)
         <tr>
             
-            <td>{{ $mhs ->nim }}</td>
-            <td>{{ $mhs ->nama }}</td>
-            <td>{{ $mhs ->kelas }}</td>
-            <td>{{ $mhs ->jurusan }}</td>
-            <td>{{ $mhs ->email }}</td>
-            <td>{{ $mhs ->alamat }}</td>
-            <td>{{ $mhs ->tanggal }}</td>
+            <td>{{ $mhs->nim }}</td>
+            <td>{{ $mhs->nama }}</td>
+            <td>{{ $mhs->kelas->nama_kelas }}</td>
+            <td>{{ $mhs->jurusan }}</td>
+            
             <td>
             <form action="{{ route('mahasiswa.destroy',['mahasiswa'=>$mhs->nim]) }}" method="POST">
    
@@ -55,4 +64,8 @@
         </tr>
         @endforeach
     </table>
+    <div class="d-flex justify-content-end">
+        {{ $mahasiswa->links() }}
+    </div>
+    
 @endsection 

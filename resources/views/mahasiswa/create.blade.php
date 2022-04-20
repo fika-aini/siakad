@@ -32,23 +32,15 @@
                 </div>
                 <div class="form-group">
                     <label for="Kelas">Kelas</label>
-                    <input type="Kelas" name="Kelas" class="form-control" id="Kelas" ariadescribedby="password">
+                    <select name="Kelas" id="Kelas" class="form-control">
+                        @foreach ($kelas as $kls)
+                        <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="Jurusan">Jurusan</label>
                     <input type="Jurusan" name="Jurusan" class="form-control" id="Jurusan" ariadescribedby="Jurusan">
-                </div>
-                <div class="form-group">
-                    <label for="Email">E-mail</label>
-                    <input type="Email" name="Email" class="form-control" id="Email" ariadescribedby="Email">
-                </div>
-                <div class="form-group">
-                    <label for="Alamat">Alamat</label>
-                    <input type="Alamat" name="Alamat" class="form-control" id="Alamat" ariadescribedby="Alamat">
-                </div>
-                <div class="form-group">
-                    <label for="Tanggal">Tanggal Lahir</label>
-                    <input type="Tanggal" name="Tanggal" class="form-control" id="Tanggal" ariadescribedby="Tanggal">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
