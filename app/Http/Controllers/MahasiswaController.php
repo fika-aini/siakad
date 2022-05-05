@@ -164,10 +164,14 @@ class MahasiswaController extends Controller
         return view('mahasiswa.index',['mahasiswa'=>$mahasiswa]);
     }
 
-     public function nilai($Nim){
-         $mhs = Mahasiswa::with('kelas')->where('nim',$Nim)->first();
-         $matkul = Mahasiswa_Matakuliah::with('matakuliah')->where('mahasiswa_id',($mhs->id_mahasiswa))->get();
+     public function nilai($nim){
+        $mhs = Mahasiswa_Matakuliah::with('matakuliah')->where('mahasiswa_id',$nim)->get();
+        $mhs->mahasiswa = Mahasiswa::with('kelas')->where('Nim',$nim)->first();
+        return view('mahasiswa.nilai', ['mhs' => $mhs]);
+        // $matkul = Mahasiswa_Matakuliah::with('matakuliah')->where('mahasiswa_id',($mhs->id_mahasiswa))->get();
+        // return view('mahasiswa.nilai',['mahasiswa' => $mhs, 'matakuliah' => $matkul]);
         
-         return view('mahasiswa.nilai',['mahasiswa' => $mhs, 'matakuliah' => $matkul]);
+        // $Mahasiswa = Mahasiswa::with('kelas')->where('nim',$Nim)->first();
+        // return view('mahasiswa.nilai', ['Mahasiswa' => $Mahasiswa]);
      }
 }
