@@ -47,7 +47,7 @@
             <td>{{ $mhs->nama }}</td>
             <td>{{ $mhs->kelas->nama_kelas }}</td>
             <td>{{ $mhs->jurusan }}</td>
-            
+            <td><img width="50px" src="{{ asset('storage/' . $mhs->foto)}}" alt="" srcset=""></td>
             <td>
             <form action="{{ route('mahasiswa.destroy',['mahasiswa'=>$mhs->nim]) }}" method="POST">
    

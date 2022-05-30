@@ -4,10 +4,10 @@
     <div class="row"> 
         <div class="col-lg-12 margin-tb">
             <div class="pull-left mt-2">
-                <h2 class="text-center mb-3">JURUSAN TEKNOLOGI INFORMASI-POLITEKNIK NEGERI MALANG</h2>
-                <h1 class="text-center mb-4">KARTU HASIL STUDI (KHS)</h1>
-                <a class="btn btn-success float-right" href="{{ route('mahasiswa.cetak', $mhs->mahasiswa->nim) }}"> Cetak KHS</a>
-                <div class="text-left mt-4">
+                <h5 class="text-center">JURUSAN TEKNOLOGI INFORMASI-POLITEKNIK NEGERI MALANG</h5>
+                <h4 class="text-center">KARTU HASIL STUDI (KHS)</h4>
+                
+                <div class="text-left">
                     <p><b>Nama  : </b>{{ $mhs->mahasiswa->nama }}</p>
                     <p><b>Nim   : </b>{{ $mhs->mahasiswa->nim }}</p>
                     <p><b>Kelas : </b>{{ $mhs->mahasiswa->kelas->nama_kelas }}</p>
@@ -32,5 +32,4 @@
                 </tr>
             @endforeach
         </table>
-    <a class="btn btn-secondary" href="{{ route('mahasiswa.index') }}">Kembali</a>
 @endsection 

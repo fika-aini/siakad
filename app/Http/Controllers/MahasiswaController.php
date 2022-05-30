@@ -7,7 +7,9 @@ use App\Models\Kelas;
 use App\Models\Mahasiswa_Matakuliah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Psy\TabCompletion\Matcher\FunctionsMatcher;
+use PDF;
 
 class MahasiswaController extends Controller
 {
@@ -48,19 +50,26 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //melakukan validasi data
-        $request->validate([
+        if ($request->file('foto')) {
+            $image_name = $request->file('foto')->store('fotos', 'public');
+        } else {
+            $image_name = 'default.jpg';
+        }
+          //melakukan validasi data
+          $request->validate([
             'Nim' => 'required',
             'Nama' => 'required',
             'Kelas' => 'required',
-            'Jurusan' => 'required'            
+            'Jurusan' => 'required',
+            
         ]);
-    
-        $mahasiswa = new Mahasiswa;
-        $mahasiswa->nim = $request->get('Nim');
-        $mahasiswa->nama = $request->get('Nama');
-        $mahasiswa->jurusan = $request->get('Jurusan');
-        $mahasiswa->save();
+              $mahasiswa = new Mahasiswa;
+              $mahasiswa->nim = $request->get('Nim');
+              $mahasiswa->nama = $request->get('Nama');
+              $mahasiswa->jurusan = $request->get('Jurusan');
+              $mahasiswa->kelas_id = $request->get('Kelas');
+              $mahasiswa->foto = $image_name;
+              $mahasiswa->save();
 
         //fungsi eloquent untuk menambah data
         //Mahasiswa::create($request->all());
@@ -101,7 +110,8 @@ class MahasiswaController extends Controller
         //menampilkan detail data dengan menemukan berdasarkan Nim Mahasiswa untuk diedit
         //$Mahasiswa = DB::table('mahasiswa')->where('nim', $Nim)->first();;
         //return view('mahasiswa.edit', compact('Mahasiswa'));
-        $Mahasiswa = Mahasiswa::with('kelas')->find($Nim);
+        $Mahasiswa = Mahasiswa::with('kelas')->where('nim', $Nim)->first();
+        // $Mahasiswa = Mahasiswa::with('kelas')->find($Nim);
         $kelas = Kelas::all();
         return view('mahasiswa.edit', compact('Mahasiswa', 'kelas'));
     }
@@ -120,15 +130,21 @@ class MahasiswaController extends Controller
             'Nim' => 'required',
             'Nama' => 'required',
             'Kelas' => 'required',
-            'Jurusan' => 'required',           
+            'Jurusan' => 'required',
         ]);
         //fungsi eloquent untuk mengupdate data inputan kita
-        //Mahasiswa::find($Nim)->update($request->all());
-        $mahasiswa = Mahasiswa::with('kelas')->where('nim',$Nim)->first();
+        $mahasiswa = Mahasiswa::with('kelas')->where('nim', $Nim)->first();
+        if ($mahasiswa->foto && file_exists(storage_path('app/public/' . $mahasiswa->foto))) {
+            Storage::delete('public/' . $mahasiswa->foto);  
+        }
+        $image_name = $request->file('foto')->store('fotos', 'public');
         $mahasiswa->nim = $request->get('Nim');
         $mahasiswa->nama = $request->get('Nama');
+        $mahasiswa->kelas_id = $request->get('Kelas');
         $mahasiswa->jurusan = $request->get('Jurusan');
+        $mahasiswa->foto = $image_name;
         $mahasiswa->save();
+  
 
         $kelas = new Kelas;
         $kelas->id = $request->get('Kelas');
@@ -164,7 +180,7 @@ class MahasiswaController extends Controller
         return view('mahasiswa.index',['mahasiswa'=>$mahasiswa]);
     }
 
-     public function nilai($nim){
+    public function nilai($nim){
         $mhs = Mahasiswa_Matakuliah::with('matakuliah')->where('mahasiswa_id',$nim)->get();
         $mhs->mahasiswa = Mahasiswa::with('kelas')->where('Nim',$nim)->first();
         return view('mahasiswa.nilai', ['mhs' => $mhs]);
@@ -173,5 +189,12 @@ class MahasiswaController extends Controller
         
         // $Mahasiswa = Mahasiswa::with('kelas')->where('nim',$Nim)->first();
         // return view('mahasiswa.nilai', ['Mahasiswa' => $Mahasiswa]);
-     }
+    }
+    public function cetak($nim)
+    {
+        $mhs = Mahasiswa_Matakuliah::with('matakuliah')->where('mahasiswa_id',$nim)->get();
+        $mhs->mahasiswa = Mahasiswa::with('kelas')->where('Nim',$nim)->first();
+        $pdf = PDF::loadview('mahasiswa.cetak', ['mhs' => $mhs]);
+        return $pdf->stream();
+    }
 }

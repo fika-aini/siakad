@@ -14,7 +14,8 @@ class Mahasiswa extends Model
         'Nim',
         'Nama',
         'kelas_id',
-        'Jurusan'
+        'Jurusan',
+        'Foto'
     ];
 
     public function kelas(){
